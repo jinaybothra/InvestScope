@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>InvestScope – Smart Visualizer</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <h1>📈 InvestScope – Smart Investment Visualizer</h1>
+
+  <section id="network-status-box">
+    <p><strong>Network Status:</strong> <span id="network-status">Checking...</span></p>
+  </section>
+
+  <section class="highlight-section" id="product-summary">
+    <h2>💼 Investment Product Summary</h2>
+    <p>This tool shows the risk-return profile of stocks using live financial data.</p>
+  </section>
+
+  <section class="highlight-section" id="risk-disclosure">
+    <h2>⚠️ Risk Disclosure</h2>
+    <p>Returns shown are past performance and not a guarantee of future results. Always invest wisely.</p>
+  </section>
+
+  <section id="stock-input">
+    <h2>🔍 Check a Stock</h2>
+    <input type="text" id="stock-symbol" placeholder="Enter Stock Symbol (e.g. AAPL, TSLA)" />
+    <button id="fetch-btn">Fetch & Visualize Realtime Risk vs Return </button>
+  </section>
+
+  <section id="canvas-section">
+    <h2>📊 Portfolio Risk vs Return</h2>
+    <canvas id="portfolio-canvas" width="400" height="300"></canvas>
+  </section>
+
+  <script src="app.js"></script>
+</body>
+</html>
