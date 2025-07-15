@@ -66,6 +66,21 @@ async function fetchStockData(symbol) {
     const { avgReturn, risk } = await fetchStockData(symbol);
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+    // 💡 Horizontal background bands for return zones
+const returnBands = [
+  { label: "Low Return", color: "#87ef10ff" },
+  { label: "Medium Return", color: "#fffde7" },
+  { label: "High Return", color: "#fce4ec" }
+];
+
+const bandHeight = (canvas.height - 40) / 3;
+
+returnBands.forEach((band, i) => {
+  ctx.fillStyle = band.color;
+  ctx.fillRect(0, 10 + i * bandHeight, canvas.width, bandHeight);
+});
+
+
     
     const marginLeft = 50;
     const marginBottom = 40;
