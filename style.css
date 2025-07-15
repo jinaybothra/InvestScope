@@ -23,6 +23,7 @@ section {
   margin-right: 10px;
   border: 1px solid #ccc;
   border-radius: 6px;
+  width: 30%;
 }
 
 #stock-input button {
