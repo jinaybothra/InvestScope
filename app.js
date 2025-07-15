@@ -1,4 +1,4 @@
-const AV_API_KEY = ' D6V7OOOO50BRF89F'; // Replace with your API key
+const TWELVE_API_KEY = '96f606297b184be58626dbc0d33f7838'; 
 
 const input = document.getElementById("stock-symbol");
 const fetchBtn = document.getElementById("fetch-btn");
@@ -39,23 +39,27 @@ sections.forEach((section) => observer.observe(section));
 
 
 async function fetchStockData(symbol) {
-  const url = `https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=${symbol}&outputsize=compact&apikey=${AV_API_KEY}`;
+  const url = `https://api.twelvedata.com/time_series?symbol=${symbol}&interval=1day&outputsize=30&apikey=${TWELVE_API_KEY}`;
   const res = await fetch(url);
   const data = await res.json();
-  const ts = data["Time Series (Daily)"];
-  if (!ts) throw new Error("Invalid symbol or API limit exceeded");
 
-  const dates = Object.keys(ts).sort();
-  const closes = dates.map((d) => parseFloat(ts[d]["4. close"]));
+  if (!data || !data.values || data.status === "error") {
+    throw new Error("Invalid symbol or API limit exceeded");
+  }
+
+  const closes = data.values
+    .reverse() // ensure oldest to newest
+    .map(d => parseFloat(d.close));
+
   const returns = [];
-
   for (let i = 1; i < closes.length; i++) {
-    returns.push((closes[i] - closes[i - 1]) / closes[i - 1]);
+    const r = (closes[i] - closes[i - 1]) / closes[i - 1];
+    returns.push(r);
   }
 
   const avgReturn = returns.reduce((a, b) => a + b, 0) / returns.length;
   const stdDev = Math.sqrt(
-    returns.map((r) => (r - avgReturn) ** 2).reduce((a, b) => a + b, 0) / returns.length
+    returns.map(r => (r - avgReturn) ** 2).reduce((a, b) => a + b, 0) / returns.length
   );
 
   return { avgReturn: avgReturn * 100, risk: stdDev * 100 };
@@ -65,6 +69,21 @@ async function fetchStockData(symbol) {
   try {
     const { avgReturn, risk } = await fetchStockData(symbol);
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // 💡 Horizontal background bands for return zones
+const returnBands = [
+  { label: "Low Return", color: "#87ef10ff" },
+  { label: "Medium Return", color: "#fffde7" },
+  { label: "High Return", color: "#fce4ec" }
+];
+
+const bandHeight = (canvas.height - 40) / 3;
+
+returnBands.forEach((band, i) => {
+  ctx.fillStyle = band.color;
+  ctx.fillRect(0, 10 + i * bandHeight, canvas.width, bandHeight);
+});
+
 
     
     const marginLeft = 50;
